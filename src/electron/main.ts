@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from "electron";
 import path from "path";
 import { isDev } from "./utils.js";
+import { pollResources } from "./resource-manager.js";
 
 app.whenReady().then(() => {
   const browserWindow = new BrowserWindow({
@@ -19,6 +20,8 @@ app.whenReady().then(() => {
       path.join(app.getAppPath(), "dist-react", "index.html")
     );
   }
+
+  pollResources();
 
   browserWindow.on("closed", () => {
     app.quit();
