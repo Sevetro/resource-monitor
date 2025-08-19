@@ -1,9 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
 
 function App() {
   const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    //@ts-expect-error not provided yet
+    window.electron.subscribeToStats((stats) => {
+      console.log("Received stats:", stats);
+    });
+  }, []);
 
   return (
     <>

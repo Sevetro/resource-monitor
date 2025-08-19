@@ -1,11 +1,11 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
 import { isDev } from "./utils.js";
-import { pollResources } from "./resource-manager.js";
+import { getStaticData, pollResources } from "./resource-manager.js";
 import { getPreloadPath } from "./pathResolver.js";
 
 app.whenReady().then(() => {
-  const browserWindow = new BrowserWindow({
+  const mainWindow = new BrowserWindow({
     width: 1200,
     height: 600,
     webPreferences: {
@@ -14,16 +14,20 @@ app.whenReady().then(() => {
   });
 
   if (isDev()) {
-    browserWindow.loadURL("http://localhost:5132");
+    mainWindow.loadURL("http://localhost:5132");
   } else {
-    browserWindow.loadFile(
+    mainWindow.loadFile(
       path.join(app.getAppPath(), "dist-react", "index.html")
     );
   }
 
-  pollResources();
+  pollResources(mainWindow);
 
-  browserWindow.on("closed", () => {
+  ipcMain.handle("getStaticData", () => {
+    return getStaticData();
+  });
+
+  mainWindow.on("closed", () => {
     app.quit();
   });
 });
