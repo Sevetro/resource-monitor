@@ -6,10 +6,16 @@ function App() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    //@ts-expect-error not provided yet
     window.electron.subscribeToStats((stats) => {
       console.log("Received stats:", stats);
     });
+
+    async function getData() {
+      const data = await window.electron.getStaticData();
+      console.log(data);
+    }
+
+    getData();
   }, []);
 
   return (
