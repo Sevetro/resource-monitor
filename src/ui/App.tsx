@@ -6,16 +6,20 @@ function App() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    window.electron.subscribeToStats((stats) => {
-      console.log("Received stats:", stats);
-    });
-
     async function getData() {
       const data = await window.electron.getStaticData();
       console.log(data);
     }
 
     getData();
+  }, []);
+
+  useEffect(() => {
+    const unsub = window.electron.subscribeToStats((stats) => {
+      console.log("Received stats:", stats);
+    });
+
+    return unsub;
   }, []);
 
   return (
