@@ -11,7 +11,7 @@ export function ipcMainHandle<Key extends keyof EventPayloadMap>(
   handler: () => EventPayloadMap[Key]
 ) {
   ipcMain.handle(key, (event) => {
-    const senderFrame = event.senderFrame;
+    const { senderFrame } = event;
 
     if (senderFrame === null) {
       throw new Error("senderFrame has been destroyed or navigated");
@@ -21,6 +21,24 @@ export function ipcMainHandle<Key extends keyof EventPayloadMap>(
     return handler();
   });
 }
+
+// Send event from FE to BE
+// export function ipcMainOn<Key extends keyof EventPayloadMap>(
+//   key: Key,
+//   handler: (payload: EventPayloadMap[Key]) => void
+// ) {
+//   ipcMain.on(key, (event, payload) => {
+//     const { senderFrame } = event;
+
+//     if (senderFrame === null) {
+//       throw new Error("senderFrame has been destroyed or navigated");
+//     }
+
+//     validateEventFrame(senderFrame);
+//     return handler(payload);
+//   });
+// }
+
 
 export function ipcWebContentsSend<Key extends keyof EventPayloadMap>(
   key: Key,

@@ -1,8 +1,10 @@
 import { contextBridge, ipcRenderer } from "electron";
 
 contextBridge.exposeInMainWorld("electron", {
-  subscribeToStats: (callback) => ipcOn("stats", (stats) => callback(stats)),
+  subscribeStats: (callback) => ipcOn("stats", (stats) => callback(stats)),
   getStaticData: () => ipcInvoke("getStaticData"),
+  subscribeChangeView: (callback) => ipcOn("changeView", (view) => callback(view)),
+
 } satisfies Window["electron"]);
 
 function ipcInvoke<Key extends keyof EventPayloadMap>(
@@ -19,3 +21,12 @@ function ipcOn<Key extends keyof EventPayloadMap>(
   ipcRenderer.on(key, cb);
   return () => ipcRenderer.off(key, cb);
 }
+
+// Send event from FE to BE
+// function ipcSend<Key extends keyof EventPayloadMap>(
+//   key: Key,
+//   payload: EventPayloadMap[Key]
+// ) {
+//   ipcRenderer.send(key, payload);
+// }
+
