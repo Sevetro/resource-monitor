@@ -50,7 +50,7 @@ function App() {
 
   return (
     <div style={{ height: 120 }}>
-      <Chart data={activeUsages} maxDataPoints={10} />
+      <Chart data-testid='chart' data={activeUsages} maxDataPoints={10} />
     </div>
   );
 }
